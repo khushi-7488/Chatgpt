@@ -9,18 +9,22 @@ function App() {
   const [prompt, setPrompt] = useState("");
   const [reply, setReply] = useState(null);
   const [currThreadId, setCurrThreadId ] =useState(uuidv1);
-  
+  const [prevChat, setPrevChat] = useState([]);
+  const [newChat, setNewChat] = useState(true);
+
   const providerValues = {
     prompt, setPrompt,
     reply, setReply,
-    currThreadId, setCurrThreadId
+    currThreadId, setCurrThreadId,
+    newChat, setNewChat,
+    prevChat, setPrevChat
   };
 
   return (
     <div className="app">
       <MyContext.Provider value={providerValues}>
-        <Sidebar></Sidebar>
-        <ChatWindow></ChatWindow>
+        <Sidebar/>
+        <ChatWindow/>
       </MyContext.Provider>
     </div>
   );
