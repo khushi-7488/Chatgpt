@@ -36,7 +36,7 @@ const Chat = () => {
     <>
       {newChat && <h2>How Can I Help You Today ? &hearts;</h2>}
       <div className="chats">
-        {prevChat.slice(0, -1)?.map((chat, idx) => (
+        {prevChat?.slice(0, -1).map((chat, idx) => (
           <div
             className={chat.role === "user" ? "userDiv" : "gptDiv"}
             key={idx}
@@ -50,25 +50,25 @@ const Chat = () => {
             )}
           </div>
         ))}
-      </div>
 
-      {prevChat.length > 0 && (
-        <>
-          {latestReply === null ? (
-            <div className="gptDiv" key={"non-typing"}>
-              <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
-                {prevChat[prevChat.length - 1].content}
-              </ReactMarkdown>
-            </div>
-          ) : (
-            <div className="gptDiv" key={"typing"}>
-              <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
-                {latestReply}
-              </ReactMarkdown>
-            </div>
-          )}
-        </>
-      )}
+        {prevChat.length > 0 && (
+          <>
+            {latestReply === null ? (
+              <div className="gptDiv" key={"non-typing"}>
+                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                  {prevChat[prevChat.length - 1].content}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              <div className="gptDiv" key={"typing"}>
+                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                  {latestReply}
+                </ReactMarkdown>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </>
   );
 };
