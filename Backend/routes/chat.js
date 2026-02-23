@@ -1,6 +1,6 @@
 import express from "express";
 import Thread from "../models/Thread.js"
-import getOpenAIAPIResponse from "../utils/genai.js"
+import getGenAiAPIResponse from "../utils/genai.js"
 
 const router = express.Router();
 
@@ -61,23 +61,24 @@ router.delete("/thread/:threadId", async (req, res) => {
 router.post("/chat", async (req, res) => {
     const { threadId, message } = req.body;
     if (!threadId || !message) {
-        res.status(400).json({ error: "missing required feilds" })
+      return res.status(400).json({ error: "missing required feilds" })
     }
     try {
         let thread = await Thread.findOne({ threadId });
+        const userMessage = typeof message === "string" ? message : JSON.stringify(message);
         if (!thread) {
             thread = new Thread({
                 threadId,
-                title: message,
-                message: [{ role: "user", content: message }]
-            })
+                title: userMessage,
+                message: [{ role: "user", content: userMessage }]
+            });
         } else {
-            thread.message.push({ role: "user", content: message });
+            thread.message.push({ role: "user", content: userMessage });
         }
 
-        const assistanceReply = await getOpenAIAPIResponse(message);
+        const assistanceReply = await getGenAiAPIResponse(userMessage);
 
-        thread.message.push({ role: "assistant", content: assistanceReply.text });
+        thread.message.push({ role: "assistant", content: typeof assistanceReply === "string" ? assistanceReply.text : JSON.stringify(assistanceReply.text)});
         thread.updatedAt = new Date();
         await thread.save();
 
@@ -85,7 +86,7 @@ router.post("/chat", async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ error: "something went wrong" })
+        res.status(500).json({ error: "something goes wrong" })
     }
 })
 

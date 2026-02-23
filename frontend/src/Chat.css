@@ -11,6 +11,7 @@
 .gptDiv {
     text-align: left;
     font-size: 0.9rem;
+    max-width: 700px;
 }
 .userMessage {
     background-color: #323232;
@@ -21,5 +22,10 @@
     width: fit-content;
     
 }
-.gptMessage {
+.hljs {
+    border-radius: 14px !important;
+}
+
+pre{
+    white-space: pre-wrap;
 }

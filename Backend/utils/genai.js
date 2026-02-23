@@ -20,15 +20,24 @@ const getGenAiAPIResponse = async (message) => {
     };
 
     try {
-        // 2. Added 'await' here
         const response = await fetch(API_URL, options);
         const data = await response.json();
 
-        console.log("Gemini Response:", data.candidates[0].content.parts[0]);  //reply
+        if (!response.ok) {
+            console.error("Gemini API Error:", data);
+            throw new Error(data.error?.message || "Gemini API returned an error");
+        }
+
+        if (!data.candidates || !data.candidates[0]) {
+            console.error("Invalid Gemini response:", data);
+            throw new Error("No candidates in response");
+        }
+
+        console.log("Gemini Response:", data.candidates[0].content.parts[0]);
         return data.candidates[0].content.parts[0];
     } catch (err) {
         console.error("Error calling Gemini:", err);
-        res.status(500).send({ error: "Failed to fetch from Gemini API" });
+        throw err;
     }
 }
 

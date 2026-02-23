@@ -14,72 +14,49 @@ function ChatWindow() {
     setCurrThreadId,
     prevChat,
     setPrevChat,
+    setNewChat,
   } = useContext(MyContext);
   const [loading, setLoading] = useState(false);
 
-  // const getReply = async () => {
-  //   setLoading(true);
-  //   const options = {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       message: prompt,
-  //       threadId: currThreadId,
-  //     }),
-  //   };
-  //   try {
-  //     const response = await fetch("http://localhost:8080/api/chat", options);
-  //     const res = await response.json();
-  //     console.log(res);
-  //     setReply(res.reply);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  //   setLoading(false);
-  // };
   const getReply = async () => {
-   setLoading(true);
+    setLoading(true);
+    setNewChat(false);
 
-
-   const options = {
-     method: "POST",
-     headers: {
-       "Content-Type": "application/json",
-     },
-     body: JSON.stringify({
-       message: prompt,
-       threadId: currThreadId,
-     }),
-   };
-   try {
-     const response = await fetch("http://localhost:8080/api/chat", options);
-     const res = await response.json();
-     console.log(res);
-     setReply(res.reply);
-   } catch (err) {
-     console.log(err);
-   }
-   setLoading(false);
- };
-
-
-
-
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: prompt,
+        threadId: currThreadId,
+      }),
+    };
+    try {
+      const response = await fetch("http://localhost:8080/api/chat", options);
+      const res = await response.json();
+      console.log(res);
+      setReply(res.reply);
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
 
   //Append new chat to prev chat
   useEffect(() => {
     if (prompt && reply) {
-      setPrevChat(prevChat =>
-        [...prevChat,{
-          role:"user",
-          content: prompt
-        },{
+      setPrevChat((prevChat) => [
+        ...prevChat,
+        {
+          role: "user",
+          content: prompt,
+        },
+        {
           role: "assistant",
-          content: reply
-        }]
-      );
+          content: reply,
+        },
+      ]);
     }
     setPrompt("");
   }, [reply]);
